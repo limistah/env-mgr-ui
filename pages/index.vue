@@ -6,5 +6,7 @@
 </template>
 
 <script lang="ts">
-export default {}
+export default {
+  // beforeResolve(to, from, next) {},
+}
 </script>

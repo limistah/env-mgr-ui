@@ -104,6 +104,11 @@
 
 <script>
 export default {
+  mounted() {
+    if (sessionStorage.getItem('authToken')) {
+      this.$nuxt.$options.router.push('/dashboard')
+    }
+  },
   data() {
     return {
       firstName: '',

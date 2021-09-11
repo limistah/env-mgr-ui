@@ -1,25 +1,39 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
+  <form
+    class="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12"
+    v-on:submit.prevent="handleSubmit"
+  >
     <div class="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
-      <h1 class="font-bold text-center text-2xl mb-5">Env Manager</h1>
+      <h1 class="font-bold text-center text-2xl mb-5">Login To Dashboard</h1>
       <div class="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
         <div class="px-5 py-7">
           <label class="font-semibold text-sm text-gray-600 pb-1 block"
             >E-mail</label
           >
           <input
-            type="text"
+            v-model="email"
+            type="email"
             class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
           />
           <label class="font-semibold text-sm text-gray-600 pb-1 block"
             >Password</label
           >
           <input
-            type="text"
+            v-model="password"
+            type="password"
             class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
           />
+          <div class="w-full">
+            {{ error }}
+          </div>
+
+          <div class="w-full">
+            {{ formMessage }}
+          </div>
+
           <button
-            type="button"
+            :disabled="loading"
+            type="submit"
             class="
               transition
               duration-200
@@ -59,95 +73,88 @@
             </svg>
           </button>
         </div>
-        <div class="py-5">
-          <div class="grid grid-cols-2 gap-1">
-            <div class="text-center sm:text-left whitespace-nowrap">
-              <button
-                class="
-                  transition
-                  duration-200
-                  mx-5
-                  px-5
-                  py-4
-                  cursor-pointer
-                  font-normal
-                  text-sm
-                  rounded-lg
-                  text-gray-500
-                  hover:bg-gray-100
-                  focus:outline-none
-                  focus:bg-gray-200
-                  focus:ring-2
-                  focus:ring-gray-400
-                  focus:ring-opacity-50
-                  ring-inset
-                "
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  class="w-4 h-4 inline-block align-text-top"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
-                  />
-                </svg>
-                <span class="inline-block ml-1">Forgot Password</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="py-5">
-        <div class="grid grid-cols-2 gap-1">
-          <div class="text-center sm:text-left whitespace-nowrap">
-            <button
-              class="
-                transition
-                duration-200
-                mx-5
-                px-5
-                py-4
-                cursor-pointer
-                font-normal
-                text-sm
-                rounded-lg
-                text-gray-500
-                hover:bg-gray-200
-                focus:outline-none
-                focus:bg-gray-300
-                focus:ring-2
-                focus:ring-gray-400
-                focus:ring-opacity-50
-                ring-inset
-              "
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                class="w-4 h-4 inline-block align-text-top"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
-              <span class="inline-block ml-1">
-                <nuxt-link to="/signup">Signup Here</nuxt-link>
-              </span>
-            </button>
-          </div>
-        </div>
       </div>
     </div>
-  </div>
+  </form>
 </template>
+
+<script>
+export default {
+  mounted() {
+    if (sessionStorage.getItem('authToken')) {
+      this.$nuxt.$options.router.push('/dashboard')
+    }
+  },
+  data() {
+    return {
+      password: '',
+      email: '',
+      loading: false,
+      formMessage: '',
+      success: false,
+    }
+  },
+  methods: {
+    handleSubmit() {
+      if (this.error) {
+        return
+      }
+      const body = {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        password: this.password,
+      }
+
+      this.loading = true
+
+      fetch('http://localhost:3200/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(async (res) => {
+          const resp = await res.json()
+          this.loading = false
+          if (res.ok) {
+            this.success = true
+            // this.clearForm()
+            this.formMessage = 'Login Successful'
+            sessionStorage.setItem('authToken', resp.access_token)
+            sessionStorage.setItem('userData', JSON.stringify(resp.user))
+            this.$nuxt.$options.router.push('/dashboard')
+          } else {
+            const msg = resp.message
+            this.formMessage = Array.isArray(msg) ? resp.message[0] : msg
+          }
+        })
+        .catch((err) => {
+          this.loading = false
+          this.success = false
+          this.formMessage = 'An error occured. Please try again.'
+        })
+    },
+    clearForm() {
+      this.email = ''
+      this.password = ''
+    },
+  },
+  computed: {
+    error() {
+      if (!this.success) {
+        if (!this.email) {
+          return 'Email is required'
+        }
+
+        if (!this.password) {
+          return 'Password is required'
+        }
+      }
+
+      return ''
+    },
+  },
+}
+</script>

@@ -5,5 +5,11 @@
 </template>
 
 <script lang="ts">
-export default {}
+export default {
+  mounted() {
+    if (sessionStorage.getItem('authToken')) {
+      location.replace('/dashboard')
+    }
+  },
+}
 </script>
