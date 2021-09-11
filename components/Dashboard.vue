@@ -6,18 +6,22 @@
 
     <div>
       <CreateProject v-bind:user="user" @saved="handleSaved" />
+      <EditProject
+        v-bind:project="currentProject"
+        @updated="handleProjectUpdated"
+        v-if="showEditProjectForm"
+      />
     </div>
 
     <div>
       <Projects
         v-bind:projects="userProjects"
         v-on:deleted="handleProjectDeleted"
+        v-on:update="handleUpdateProject"
       />
     </div>
 
-    <div>
-      <ProjectsKeys />
-    </div>
+    <div></div>
   </div>
 </template>
 
@@ -43,6 +47,8 @@ export default {
       user: {},
       accessToken: '',
       userProjects: [],
+      currentProject: {},
+      showEditProjectForm: false,
     }
   },
   methods: {
@@ -72,6 +78,16 @@ export default {
     },
     handleProjectDeleted(id, idx) {
       this.userProjects.splice(idx, 1)
+    },
+    handleUpdateProject(proj, idx) {
+      this.currentProject = proj
+      this.showEditProjectForm = true
+    },
+    handleProjectUpdated(proj) {
+      const index = this.userProjects.findIndex((prj) => prj.id === proj.id)
+      console.log(index)
+      this.userProjects.splice(index, 1, proj)
+      this.showEditProjectForm = false
     },
   },
 }

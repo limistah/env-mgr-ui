@@ -50,6 +50,25 @@
             View
           </div>
           <div
+            class="
+              w-1/6
+              text-wrap text-center
+              flex
+              text-white text-bold
+              flex-col
+              rounded-md
+              bg-blue-500
+              justify-center
+              items-center
+              mr-10
+              p-2
+              cursor-pointer
+            "
+            v-on:click="handleEditItem(item, index)"
+          >
+            Edit
+          </div>
+          <div
             v-on:click="handleDeleteItem(item.id, index)"
             class="
               w-1/6
@@ -104,6 +123,9 @@ export default {
           this.deleteMessage = err.message
           console.log(err)
         })
+    },
+    handleEditItem(item, idx) {
+      this.$emit('update', item, idx)
     },
   },
   computed: {},
