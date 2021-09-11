@@ -113,6 +113,7 @@ export default {
       email: '',
       loading: false,
       formMessage: '',
+      success: false,
     }
   },
   methods: {
@@ -125,7 +126,7 @@ export default {
 
       // Let's use fetch to push the details
       const body = {
-        firsName: this.firstName,
+        firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
         password: this.password,
@@ -145,6 +146,7 @@ export default {
           this.loading = false
 
           if (res.ok) {
+            this.success = true
             this.clearForm()
             this.formMessage = 'Registration Successful. Proceed to login'
           } else {
@@ -167,24 +169,26 @@ export default {
   },
   computed: {
     error() {
-      if (!this.firstName) {
-        return 'First Name is required'
-      }
+      if (!this.success) {
+        if (!this.firstName) {
+          return 'First Name is required'
+        }
 
-      if (!this.lastName) {
-        return 'Last Name is required'
-      }
+        if (!this.lastName) {
+          return 'Last Name is required'
+        }
 
-      if (!this.email) {
-        return 'Email is required'
-      }
+        if (!this.email) {
+          return 'Email is required'
+        }
 
-      if (!this.password) {
-        return 'Password is required'
-      }
+        if (!this.password) {
+          return 'Password is required'
+        }
 
-      if (this.password && this.password !== this.confirmPassword) {
-        return 'Passwords do not match'
+        if (this.password && this.password !== this.confirmPassword) {
+          return 'Passwords do not match'
+        }
       }
 
       return ''
