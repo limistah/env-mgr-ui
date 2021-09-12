@@ -115,7 +115,7 @@ export default {
 
       this.loading = true
 
-      fetch('http://localhost:3200/projects', {
+      fetch('https://env-mgr.herokuapp.com/projects', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {

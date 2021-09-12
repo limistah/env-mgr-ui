@@ -92,7 +92,7 @@ export default {
     fetchProjects() {
       // Call the fetch projects endpoint from here
 
-      fetch(`http://localhost:3200/projects?org=${this.user.org_id}`, {
+      fetch(`https://env-mgr.herokuapp.com/projects?org=${this.user.org_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -127,13 +127,16 @@ export default {
     },
 
     fetchProjectKeys() {
-      fetch(`http://localhost:3200/keys?project=${this.currentProject.id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${sessionStorage.getItem('authToken')}`,
-        },
-      })
+      fetch(
+        `https://env-mgr.herokuapp.com/keys?project=${this.currentProject.id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${sessionStorage.getItem('authToken')}`,
+          },
+        }
+      )
         .then(async (res) => {
           const resp = await res.json()
           if (res.ok) {

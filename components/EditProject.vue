@@ -108,7 +108,7 @@ export default {
 
       this.loading = true
 
-      fetch(`http://localhost:3200/projects/${this.project.id}`, {
+      fetch(`https://env-mgr.herokuapp.com/projects/${this.project.id}`, {
         method: 'PATCH',
         body: JSON.stringify(body),
         headers: {

@@ -140,7 +140,7 @@ export default {
 
       this.loading = true
 
-      fetch('http://localhost:3200/keys', {
+      fetch('https://env-mgr.herokuapp.com/keys', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {

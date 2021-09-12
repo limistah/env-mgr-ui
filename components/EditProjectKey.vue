@@ -123,7 +123,7 @@ export default {
 
       this.loading = true
 
-      fetch(`http://localhost:3200/keys/${this.projectKey.id}`, {
+      fetch(`https://env-mgr.herokuapp.com/keys/${this.projectKey.id}`, {
         method: 'PATCH',
         body: JSON.stringify(body),
         headers: {

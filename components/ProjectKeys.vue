@@ -95,7 +95,7 @@ export default {
       // Call the fetch projects endpoint from here
     },
     handleDeleteItem(id, idx) {
-      fetch(`http://localhost:3200/keys/${id}`, {
+      fetch(`https://env-mgr.herokuapp.com/keys/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

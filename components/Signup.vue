@@ -139,7 +139,7 @@ export default {
 
       this.loading = true
 
-      fetch('http://localhost:3200/users/signup', {
+      fetch('https://env-mgr.herokuapp.com/users/signup', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {

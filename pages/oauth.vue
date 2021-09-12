@@ -44,7 +44,7 @@ export default {
       this.fetchLongLiveToken()
     },
     fetchLongLiveToken() {
-      fetch('http://localhost:3200/auth/oauth', {
+      fetch('https://env-mgr.herokuapp.com/auth/oauth', {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${sessionStorage.getItem('authToken')}`,

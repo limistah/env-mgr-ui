@@ -109,7 +109,7 @@ export default {
 
       this.loading = true
 
-      fetch('http://localhost:3200/auth/login', {
+      fetch('https://env-mgr.herokuapp.com/auth/login', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {
