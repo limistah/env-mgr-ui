@@ -13,8 +13,9 @@ export default {
     }
   },
   methods: {
-    handleLoggedIn() {
-      this.$nuxt.$options.router.push('/dashboard')
+    handleLoggedIn: () => {
+      location.replace('/dashboard')
+      // this.$nuxt.$options.router.push('/dashboard')
     },
   },
 }

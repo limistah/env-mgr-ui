@@ -129,7 +129,6 @@ export default {
 
           if (res.ok) {
             this.success = true
-            this.clearForm()
             this.formMessage = 'Project Created successfully.'
             this.$emit('saved', resp)
             this.showForm = false
@@ -139,6 +138,7 @@ export default {
           }
         })
         .catch((err) => {
+          console.log(err)
           this.loading = false
           this.formMessage = 'An error occured. Please try again.'
         })

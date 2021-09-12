@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="w-100 bg-gray text-center">
+  <div class="bg-gray">
+    <div class="w-100 bg-gray text-4xl p-3 font-bold text-center">
       Welcome {{ this.user.first_name }} {{ this.user.last_name }}
     </div>
 
