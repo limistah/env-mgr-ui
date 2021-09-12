@@ -1,8 +1,15 @@
 <template>
   <div class="container mb-2 mx-auto w-full">
-    <div class="w-full m-3 text-center">Test Prj 1 Keys</div>
+    <div class="w-full m-3 text-center">{{ project.name }} Envs</div>
+    <div class="w-full m-3 text-center" v-if="deleteMessage">
+      {{ deleteMessage }}
+    </div>
     <ul class="flex flex-col p-4">
-      <li class="border-gray-400 flex flex-row">
+      <li
+        class="border-gray-400 flex flex-row"
+        v-for="(item, index) in keys"
+        :key="item.id"
+      >
         <div
           class="
             select-none
@@ -22,11 +29,7 @@
           "
         >
           <div class="flex-1 pl-1 mr-16">
-            <div class="font-medium">Name</div>
-          </div>
-
-          <div class="flex-1 pl-1 mr-16">
-            <div class="font-medium">Val</div>
+            <div class="font-medium">{{ item.name }}</div>
           </div>
           <div
             class="
@@ -43,10 +46,12 @@
               p-2
               cursor-pointer
             "
+            v-on:click="handleEditItem(item, index)"
           >
             Edit
           </div>
           <div
+            v-on:click="handleDeleteItem(item.id, index)"
             class="
               w-1/6
               text-wrap text-center
@@ -69,3 +74,52 @@
     </ul>
   </div>
 </template>
+<script>
+export default {
+  props: ['project', 'user', 'keys'],
+  data() {
+    return {
+      deleteMessage: '',
+      projectKeys: [],
+    }
+  },
+  mounted() {
+    this.fetchProjectKeys()
+  },
+  methods: {
+    handleReturnToProjects() {
+      this.$emit('back')
+    },
+
+    fetchProjectKeys() {
+      // Call the fetch projects endpoint from here
+    },
+    handleDeleteItem(id, idx) {
+      fetch(`http://localhost:3200/keys/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionStorage.getItem('authToken')}`,
+        },
+      })
+        .then(async (res) => {
+          const resp = await res.json()
+          if (res.ok) {
+            this.$emit('deleted', id, idx)
+          } else {
+            const msg = resp.message
+            this.deleteMessage = Array.isArray(msg) ? resp.message[0] : msg
+          }
+        })
+        .catch((err) => {
+          this.deleteMessage = err.message
+          console.log(err)
+        })
+    },
+    handleEditItem(item, idx) {
+      this.$emit('update', item, idx)
+    },
+  },
+  computed: {},
+}
+</script>

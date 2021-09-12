@@ -46,6 +46,7 @@
               p-2
               cursor-pointer
             "
+            v-on:click="handleViewItem(item, index)"
           >
             View
           </div>
@@ -126,6 +127,9 @@ export default {
     },
     handleEditItem(item, idx) {
       this.$emit('update', item, idx)
+    },
+    handleViewItem(item, idx) {
+      this.$emit('view', item, idx)
     },
   },
   computed: {},

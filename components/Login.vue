@@ -4,7 +4,7 @@
     v-on:submit.prevent="handleSubmit"
   >
     <div class="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
-      <h1 class="font-bold text-center text-2xl mb-5">Login To Dashboard</h1>
+      <h1 class="font-bold text-center text-2xl mb-5">{{ title }}</h1>
       <div class="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
         <div class="px-5 py-7">
           <label class="font-semibold text-sm text-gray-600 pb-1 block"
@@ -80,8 +80,9 @@
 
 <script>
 export default {
+  props: ['auth', 'title'],
   mounted() {
-    if (sessionStorage.getItem('authToken')) {
+    if (sessionStorage.getItem('authToken') && !this.auth) {
       this.$nuxt.$options.router.push('/dashboard')
     }
   },
@@ -124,7 +125,7 @@ export default {
             this.formMessage = 'Login Successful'
             sessionStorage.setItem('authToken', resp.access_token)
             sessionStorage.setItem('userData', JSON.stringify(resp.user))
-            this.$nuxt.$options.router.push('/dashboard')
+            this.$emit('login', resp)
           } else {
             const msg = resp.message
             this.formMessage = Array.isArray(msg) ? resp.message[0] : msg
